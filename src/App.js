@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import "./App.css"
-// const toDoList=[];
+
 
 class Item {
   constructor(content, completed, index) {
@@ -27,7 +27,6 @@ function App() {
       setSorter(sorter+1);
     } else if (sorter === 1) {
       setFilterList(toDoList.slice().sort((a, b) => b.content.localeCompare(a.content)));
-      // console.log(toDoList, "E")
       setSorter(sorter+1);
     } else if (sorter === 2) {
       setFilterList(toDoList.slice().sort((a, b) => Number(a.completed)- Number(b.completed)));
@@ -36,20 +35,12 @@ function App() {
       setFilterList(toDoList.slice().sort((a, b) => Number(!a.completed)- Number(!b.completed)));
       setSorter(sorter + 1);
     } else if (sorter === 4) {
-      setFilterList(toDoList.slice().sort((a, b) => a.timeAdded - b.timeAdded));
+      setFilterList(toDoList.slice().sort((a, b) => b.timeAdded - a.timeAdded));
       setSorter(sorter + 1);
     } else if (sorter === 5) {
-      setFilterList(toDoList.slice().sort((a, b) => b.timeAdded - a.timeAdded));
+      setFilterList(toDoList.slice().sort((a, b) => a.timeAdded - b.timeAdded));
       setSorter(0);
     }
-      // for (let i = 0; i < toDoList.length; i++) {
-    //   // console.log(toDoList[i].index);
-    //   // console.log(i);
-    //   toDoList[i].index=i;
-    //   // console.log(toDoList[i].index);
-    //   // console.log(toDoList[i]);
-    // }
-    // console.log(toDoList)
 
     return sorter;
   }
@@ -115,6 +106,7 @@ function App() {
       toDoList.push(item)
       setItem(new Item("", false))
     }
+    setFilterList([...toDoList]);
   }
 
   function onItemChange(e) {
@@ -129,9 +121,7 @@ function App() {
         } else {
           updatedList[index].timeCompleted = null;
         }
-    // updatedList[index].time = !toDoList[index].completed;
     setToDoList(updatedList);
-    // updatedList[index].completed = !toDoList[index].completed;
   }
 
   function onCompleteFilterChange() {
@@ -144,21 +134,9 @@ function App() {
 
   return (
       <>
-        <head>
-          <title>Todo</title>
-          {/*<meta name="description" content="Your Video Stream App" />*/}
-          <meta charSet="utf-8"/>
-          <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-                integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-                crossOrigin="anonymous"/>
-          <meta name="viewport" content="width=device-width, initial-scale=1"/>
-          {/*<link rel="icon" href="/favicon.ico" />*/}
-        </head>
         <h1 className="d-flex justify-content-center pt-2">Todo list</h1>
         {/*Input*/}
         <div className="mt-n1">
-          <input type="checkbox" className="form-check-input" id="exampleCheck1"
-                 onChange={(e) => onCompleteFilterChange()}/>
           <div className="d-flex justify-content-center">
             <form className="row g-3" onSubmit={(e) => onSubmit(e)}>
               <input
@@ -192,14 +170,14 @@ function App() {
               <div className="col-md-8">
               <ul className="list-group">
                 {filter === 1
-                    ? toDoList.filter((i) => i.completed).map((item) => (
+                    ? filterList.filter((i) => i.completed).map((item) => (
                         <ListItem key={item.index} item={item}/>
                     ))
                     : filter === 2
-                        ? toDoList.filter((i) => !i.completed).map((item) => (
+                        ? filterList.filter((i) => !i.completed).map((item) => (
                             <ListItem key={item.index} item={item}/>
                         ))
-                        : toDoList.map((item) => (
+                        : filterList.map((item) => (
                             <ListItem key={item.index} item={item}/>
                         ))}
               </ul>
