@@ -2,9 +2,15 @@
   text-align: center;
 }
 
+.list-group-item { word-wrap: break-word; }
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
+}
+
+.label-wrap {
+  word-wrap: break-word;
 }
 
 @media (prefers-reduced-motion: no-preference) {

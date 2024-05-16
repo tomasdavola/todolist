@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-
-const toDoList=[];
+import "./App.css"
+// const toDoList=[];
 
 class Item {
   constructor(content, completed, index) {
@@ -14,30 +14,45 @@ function App() {
   const [item, setItem] = useState(new Item("",false,0));
   const [filter, setFilter] = useState(0);
   const filterText=["All", "Completed", "Active"];
+  const [toDoList, setToDoList]=useState([]);
 
+  function ListItem({ item }) {
+    return (
+        <li key={item.index} className="list-group-item">
+          <input type="checkbox" className="form-check-input me-3"
+                 id={item.index} checked={item.completed}
+                 onChange={(e) => onCompleteChange(e, item.index)}/>
+          <label className="form-check-label ms-1 d-block" htmlFor={item.index}>{item.content}</label>
+        </li>
+    );
+  }
 
-
-
-  function onSubmit (e) {
+  function onSubmit(e) {
     e.preventDefault();
-    if (item.content!==""){
+    if (item.content !== "") {
       toDoList.push(item)
       setItem(new Item("", false))
     }
   }
 
-  function onItemChange (e) {
+  function onItemChange(e) {
     setItem(new Item(e.target.value, false, toDoList.length));
   }
-  function onCompleteChange (e, index) {
-    toDoList[index].completed = !toDoList[index].completed;
+
+  function onCompleteChange(e, index) {
+    const updatedList = [...toDoList]; // Create a copy of the array
+    // updatedList[index] = {...updatedList[index], completed: !updatedList[index].completed}; // Update the completed property
+    updatedList[index].completed = !toDoList[index].completed;
+    setToDoList(updatedList);
+    // updatedList[index].completed = !toDoList[index].completed;
   }
-  function onCompleteFilterChange () {
+
+  function onCompleteFilterChange() {
     console.log("eeee")
-    if (filter===2){
+    if (filter === 2) {
       setFilter(0);
     } else {
-      setFilter(filter+1);
+      setFilter(filter + 1);
     }
   }
 
@@ -87,31 +102,21 @@ function App() {
           <div className="mt-1 container">
           <div className="row justify-content-center ">
             <div className="col-md-8">
-            <ul className="list-group">
-              {filter === 1
-                  ? toDoList.filter((i) => i.completed).map((item) => (
-                      <div key={item.index} class="list-group-item">
-                        <input type="checkbox" className="form-check-input me-3" id={item.index}
-                               onChange={(e) => onCompleteChange(e, item.index)}/>
-                        <label className="form-check-label ms-1" htmlFor={item.index}>{item.content}</label>
-                      </div>))
-                  : filter === 2
-                      ? toDoList.filter((i) => !i.completed).map((item) => (
-                          <div key={item.index} class="list-group-item">
-                            <input type="checkbox" className="form-check-input me-3" id={item.index}
-                                   onChange={(e) => onCompleteChange(e, item.index)}/>
-                            <label className="form-check-label ms-1" htmlFor={item.index}>{item.content}</label>
-                          </div>))
-                      : toDoList.map((item) => (
-                          <div key={item.index} class="list-group-item">
-                            <input type="checkbox" className="form-check-input me-3" id={item.index}
-                                   onChange={(e) => onCompleteChange(e, item.index)}/>
-                            <label className="form-check-label ms-1" htmlFor={item.index}>{item.content}</label>
-                          </div>))
-              }
-            </ul>
+              <ul className="list-group">
+                {filter === 1
+                    ? toDoList.filter((i) => i.completed).map((item) => (
+                        <ListItem key={item.index} item={item}/>
+                    ))
+                    : filter === 2
+                        ? toDoList.filter((i) => !i.completed).map((item) => (
+                            <ListItem key={item.index} item={item}/>
+                        ))
+                        : toDoList.map((item) => (
+                            <ListItem key={item.index} item={item}/>
+                        ))}
+              </ul>
+            </div>
           </div>
-        </div>
           </div>
         </div>
       </>
